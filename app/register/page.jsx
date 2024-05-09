@@ -1,27 +1,55 @@
-"use client"
-import { useState } from 'react';
-import Link from 'next/link'
+'use client'
+import { useRouter } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Link from 'next/link';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+  username: Yup.string().required('Username is required'),
+  email: Yup.string().email('Invalid email address').required('Email is required'),
+  password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+  role: Yup.string().required('Role is required'),
+});
 
 const Register = () => {
+  const router = useRouter();
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      // Make a POST request to your API
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+  
+      if (!response.ok) {
+        // throw new Error('Failed to register user');
+        const errorData = await response.json();
+    console.log(errorData)
+    toast.error(errorData.message);
+      }
+      if (response.ok) {
+        // Show toast notification for successful registration
+        toast.success('Registration successful');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you can perform your registration logic
-    console.log('Registration submitted:', { firstName, lastName, email, password, role });
-    // Reset form fields after submission
-    setFirstName('');
-    setLastName('');
-    setEmail('');
-    setPassword('');
-    setRole('');
-    // Redirect to the login page after registration
-   
+        // Redirect to the login page after successful registration
+        router.push('/login');
+      } else {
+        const errorData = await response.json();
+        console.log(errorData)
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      console.error('Registration failed:', error.message);
+      toast.error('Failed to register');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -30,77 +58,75 @@ const Register = () => {
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Employee Registration</h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <input type="hidden" name="remember" value="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="firstName" className="sr-only">Username</label>
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                autoComplete="given-name"
-                required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="First Name"
-              />
-            </div>
-           
-            <div>
-              <label htmlFor="email" className="sr-only">Email address</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
-            </div>
-            <div>
-              <label htmlFor="role" className="sr-only">Role</label>
-              <input
-                id="role"
-                name="role"
-                type="text"
-                autoComplete="role"
-                required
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Role (e.g., Employee, Admin)"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Register
-            </button>
-          </div>
-        </form>
+        <Formik
+          initialValues={{ username: '', email: '', password: '', role: '' }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form className="mt-8 space-y-6">
+              <div className="rounded-md shadow-sm -space-y-px">
+                <div>
+                  <label htmlFor="username" className="sr-only">Username</label>
+                  <Field
+                    id="username"
+                    name="username"
+                    type="text"
+                    autoComplete="given-name"
+                    placeholder="Username"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  />
+                  <ErrorMessage name="username" component="div" className="text-red-500" />
+                </div>
+                <div>
+                  <label htmlFor="email" className="sr-only">Email address</label>
+                  <Field
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="Email address"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  />
+                  <ErrorMessage name="email" component="div" className="text-red-500" />
+                </div>
+                <div>
+                  <label htmlFor="password" className="sr-only">Password</label>
+                  <Field
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder="Password"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  />
+                  <ErrorMessage name="password" component="div" className="text-red-500" />
+                </div>
+                <div>
+                  <label htmlFor="role" className="sr-only">Role</label>
+                  <Field
+                    id="role"
+                    name="role"
+                    type="text"
+                    autoComplete="role"
+                    placeholder="Role (e.g., Employee, Admin)"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  />
+                  <ErrorMessage name="role" component="div" className="text-red-500" />
+                </div>
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  {isSubmitting ? 'Registering...' : 'Register'}
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
         <div className="text-center">
           <p>
             Already registered?{' '}
@@ -111,8 +137,14 @@ const Register = () => {
             </Link>
           </p>
         </div>
-      </div>
-    </div>
+        </div>
+    <ToastContainer /> {/* Toast container */}
+  </div>
+        
+
+      
+
+  
   );
 };
 

@@ -2,8 +2,7 @@ import { pool } from "@/app/config/db";
 
 async function createTables() {
     try {
-        // Create MySQL connection using promise-based API
-        const connection = await pool.getConnection();
+
 
         // Define table creation queries with IF NOT EXISTS clause
         const tableQueries = [

@@ -1,23 +1,41 @@
 'use client';
+
+
+import { useRouter } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import React, { useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
 
 const Login = () => {
- 
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can perform your login logic
-    console.log('Login submitted:', { email, password });
-    // Reset form fields after submission
-    setEmail('');
-    setPassword('');
-    // Redirect to another page after login (example)
-    router.push('/dashboard');
+    try {
+      // Send a POST request to your backend API endpoint
+      const response = await axios.post('/api/login', {
+        email,
+        password,
+      });
+console.log(response)
+      // Check if login was successful
+      if (response.status===200) {
+        // Redirect to dashboard or any other page after successful login
+        router.push('/userDashboard');
+      } 
+    } catch (error) {
+      // Handle any network or server errors
+      console.error('Login failed:', error.message);
+    
+    }
   };
 
   return (
