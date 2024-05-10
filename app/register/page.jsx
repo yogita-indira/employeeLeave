@@ -50,7 +50,7 @@ const Register = () => {
     <div className="flex justify-center items-center min-h-screen bg-blue-200">
     <div className="max-w-screen-xl w-1/3 mx-auto">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        {/* Left side - Login/Register Form */}
+      
         <div className="w-full p-8">
           {/* Title */}
           <h2 className="text-2xl font-bold text-blue-800 mb-4 text-center">User Registration</h2>
@@ -88,7 +88,7 @@ const Register = () => {
                   />
                   <ErrorMessage name="email" component="div" className="text-red-500" />
                 </div>
-                {/* Password input */}
+             
                 <div className="mb-4">
             
                   <Field
@@ -143,21 +143,21 @@ const Register = () => {
               </Form>
               )}
             </Formik>
-            {/* Toggle between login and register forms */}
+          
             <div className="mt-4 text-center">
               <p>
                 Already registered?{' '}
                 <Link href="/login">
-                  {/* <a className="text-blue-500 hover:text-blue-700 focus:outline-none"> */}
+                
                     Login
-                  {/* </a> */}
+                
                 </Link>
               </p>
             </div>
           </div>
         </div>
       </div>
-      <ToastContainer /> {/* Toast container */}
+      <ToastContainer /> 
     </div>
   );
 };

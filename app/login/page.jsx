@@ -28,7 +28,7 @@ const Login = () => {
         console.error('Error decoding token:', error);
       }
     }
-  }, []); // Empty dependency array means it runs only once on mount
+  }, []); 
 
   const formik = useFormik({
     initialValues: {
@@ -150,7 +150,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <ToastContainer /> {/* Toast container */}
+      <ToastContainer />
     </div>
   );
 };

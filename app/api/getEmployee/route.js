@@ -1,10 +1,10 @@
-// Add this code to your server-side API
+
 import { pool } from "@/app/config/db";
 export async function GET(request) {
     try {
       const connection = await pool.getConnection();
   
-      // Fetch all users from the database
+     
       const [users] = await connection.query(`SELECT * FROM Users WHERE role='Employee'`);
 
   

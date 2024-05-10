@@ -20,16 +20,13 @@ export async function POST(request) {
 
     const hashedPassword = await hash(password, 10); 
 
-    // Insert the user into the database
+    
     const result = await connection.query(
       "INSERT INTO Users (username, email, password, role) VALUES (?, ?, ?, ?)",
       [username, email, hashedPassword, role]
     );
 
-    // const result = await connection.query(
-    //   "INSERT INTO Users (username, email, password, role) VALUES (?, ?, ?, ?)",
-    //   [username, email, password, role]
-    // );
+   
 
     connection.release();
 

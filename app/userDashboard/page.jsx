@@ -39,11 +39,11 @@ const UserDashboard = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch leave data from LeaveTable or use dummy data
+   
     const dummyLeaves = [
       { id: 1, startDate: '2024-05-10', endDate: '2024-05-12', leaveType: 'Sick Leave', status: 'Approved', reason: 'Fever' },
       { id: 2, startDate: '2024-06-15', endDate: '2024-06-20', leaveType: 'Annual Leave', status: 'Pending', reason: 'Vacation' },
-      // Add more leave entries as needed
+    
     ];
 
     setLeaves(dummyLeaves);
@@ -58,7 +58,7 @@ const UserDashboard = () => {
     setShowLeaveForm(true);
   };
   const handleApplyLeave = () => {
-    // Add logic for applying leave
+  
     console.log('Leave application logic here');
   };
 
@@ -67,7 +67,7 @@ const UserDashboard = () => {
   };
 
   const handleSignOut = () => {
-    // Add logic for signing out
+   
     console.log('Sign out logic here');
   };
 

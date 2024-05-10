@@ -12,10 +12,10 @@ export default async function POST(req) {
     
       const { decodedToken, fromDate, toDate, leaveType, reason } = requestBody;
 
-      // Extract user ID from the decoded token
+     
       const userId = decodedToken.userId;
 
-      // Insert leave entry into the database
+   
    
       const [result] = await connection.execute(
         'INSERT INTO leaveTable (userId, fromDate, toDate, leave_type, reason) VALUES (?, ?, ?, ?, ?)',
