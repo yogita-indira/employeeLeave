@@ -18,7 +18,6 @@ const Register = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // Make a POST request to your API
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -27,21 +26,16 @@ const Register = () => {
         body: JSON.stringify(values),
       });
   
-      if (!response.ok) {
-        // throw new Error('Failed to register user');
-        const errorData = await response.json();
-    console.log(errorData)
-    toast.error(errorData.message);
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   toast.error(errorData.message);
+      // }
+      
       if (response.ok) {
-        // Show toast notification for successful registration
         toast.success('Registration successful');
-
-        // Redirect to the login page after successful registration
         router.push('/login');
       } else {
         const errorData = await response.json();
-        console.log(errorData)
         toast.error(errorData.message);
       }
     } catch (error) {
@@ -53,99 +47,120 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Employee Registration</h2>
-        </div>
-        <Formik
-          initialValues={{ username: '', email: '', password: '', role: '' }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting }) => (
-            <Form className="mt-8 space-y-6">
-              <div className="rounded-md shadow-sm -space-y-px">
-                <div>
-                  <label htmlFor="username" className="sr-only">Username</label>
+    <div className="flex justify-center items-center min-h-screen bg-blue-200">
+    <div className="max-w-screen-xl w-1/3 mx-auto">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        {/* Left side - Login/Register Form */}
+        <div className="w-full p-8">
+          {/* Title */}
+          <h2 className="text-2xl font-bold text-blue-800 mb-4 text-center">User Registration</h2>
+          {/* Form */}
+          <Formik
+            initialValues={{ username: '', email: '', password: '', role: '' }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className="flex flex-col space-y-4 px-4">
+                {/* Username input */}
+                <div className="mb-4">
+                
                   <Field
                     id="username"
                     name="username"
                     type="text"
                     autoComplete="given-name"
                     placeholder="Username"
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="input-field"
                   />
                   <ErrorMessage name="username" component="div" className="text-red-500" />
                 </div>
-                <div>
-                  <label htmlFor="email" className="sr-only">Email address</label>
+                {/* Email input */}
+                <div className="mb-4">
+
                   <Field
                     id="email"
                     name="email"
                     type="email"
                     autoComplete="email"
                     placeholder="Email address"
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="input-field"
                   />
                   <ErrorMessage name="email" component="div" className="text-red-500" />
                 </div>
-                <div>
-                  <label htmlFor="password" className="sr-only">Password</label>
+                {/* Password input */}
+                <div className="mb-4">
+            
                   <Field
                     id="password"
                     name="password"
                     type="password"
                     autoComplete="current-password"
                     placeholder="Password"
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="input-field"
                   />
                   <ErrorMessage name="password" component="div" className="text-red-500" />
                 </div>
-                <div>
-                  <label htmlFor="role" className="sr-only">Role</label>
-                  <Field
-                    id="role"
-                    name="role"
-                    type="text"
-                    autoComplete="role"
-                    placeholder="Role (e.g., Employee, Admin)"
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  />
-                  <ErrorMessage name="role" component="div" className="text-red-500" />
-                </div>
-              </div>
-              <div>
+                {/* Role input */}
+                <div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+  <div className="flex items-center">
+    <div className="mr-4">
+      <Field
+        id="role-employee"
+        name="role"
+        type="radio"
+        value="employee"
+        className="toggle-switch"
+      />
+      <label htmlFor="role-employee" className="toggle-switch-label">Employee</label>
+    </div>
+    <div>
+      <Field
+        id="role-admin"
+        name="role"
+        type="radio"
+        value="admin"
+        className="toggle-switch"
+      />
+      <label htmlFor="role-admin" className="toggle-switch-label">Admin</label>
+    </div>
+
+
+  </div>
+  <ErrorMessage name="role" component="div" className="text-red-500" />
+</div>
+
+       
+                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="py-2 px-4 border border-black text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   {isSubmitting ? 'Registering...' : 'Register'}
                 </button>
-              </div>
-            </Form>
-          )}
-        </Formik>
-        <div className="text-center">
-          <p>
-            Already registered?{' '}
-            <Link href="/login">
-             
-                Login
-             
-            </Link>
-          </p>
+              </Form>
+              )}
+            </Formik>
+            {/* Toggle between login and register forms */}
+            <div className="mt-4 text-center">
+              <p>
+                Already registered?{' '}
+                <Link href="/login">
+                  {/* <a className="text-blue-500 hover:text-blue-700 focus:outline-none"> */}
+                    Login
+                  {/* </a> */}
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
-        </div>
-    <ToastContainer /> {/* Toast container */}
-  </div>
-        
-
-      
-
-  
+      </div>
+      <ToastContainer /> {/* Toast container */}
+    </div>
   );
 };
 
 export default Register;
+

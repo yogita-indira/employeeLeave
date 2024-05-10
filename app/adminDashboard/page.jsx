@@ -2,11 +2,13 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -14,9 +16,8 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/getEmployee'); 
+      const response = await axios.get('/api/getEmployee');
       setUsers(response.data.users);
-      console.log(response)
       setLoading(false);
       setError(null);
     } catch (error) {
@@ -26,25 +27,92 @@ const AdminDashboard = () => {
     }
   };
 
+  const deleteUser = async (userId) => {
+    try {
+      await axios.delete(`/api/deleteEmployee/${userId}`);
+      setUsers(users.filter((user) => user.id !== userId));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      setError('Failed to delete user. Please try again.');
+    }
+  };
+
+  const handleDeleteUser = (userId) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      deleteUser(userId);
+    }
+  };
+
+  const handleToggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleSignOut = () => {
+    // Add signout logic here
+    console.log('Signing out...');
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p className="text-red-500">{error}</p>
-      ) : (
-        <div className="grid grid-flow-row auto-rows-max">
-          {users.map((user, index) => (
-            <div key={index} className="w-full md:w-1/3 p-4">
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <h2 className="text-xl font-semibold mb-2">{user.username}</h2>
-                <p className="text-gray-600">{user.email}</p>
-              </div>
-            </div>
-          ))}
+    <div className="flex">
+      {/* Sidebar */}
+      <div className={`h-screen w-64 bg-sky-300 ${sidebarOpen ? 'block' : 'hidden'}`}>
+        <h1 className="text-3xl font-bold text-white p-4">Admin Panel</h1>
+        <p className="text-white p-4">Admin Name</p>
+        <button className="text-white p-4" onClick={handleSignOut}>Sign Out</button>
+        {/* Add any additional sidebar content here */}
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1">
+        <nav className="bg-blue-300 p-4">
+          <div className="container mx-auto flex justify-between items-center">
+            <div className="text-white font-bold">Admin Dashboard</div>
+            <button className="text-white" onClick={handleToggleSidebar}>Toggle Sidebar</button>
+          </div>
+        </nav>
+
+        <div className="container mx-auto px-4 py-8">
+          {loading ? (
+            <p className="text-gray-600">Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2">ID</th>
+                  <th className="px-4 py-2">Username</th>
+                  <th className="px-4 py-2">Email</th>
+                  <th className="px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                   
+                    <td className="border px-4 py-2">{user.username}</td>
+                    <td className="border px-4 py-2">{user.email}</td>
+                    <td className="border px-4 py-2">{user.email}</td>
+                    <td className="border px-4 py-2">
+                      <button
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md mr-2"
+                      >
+                        <FaTrash />
+                      </button>
+                      <button
+                        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-2 rounded-md"
+                      >
+                        <FaEdit />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -18,6 +18,7 @@ async function createTables() {
                 user_id INT NOT NULL,
                 start_date DATE NOT NULL,
                 end_date DATE NOT NULL,
+                leaveType,
                 status ENUM('Pending', 'Approved', 'Rejected') NOT NULL,
                 reason VARCHAR(255),
                 FOREIGN KEY (user_id) REFERENCES User(id)
@@ -46,3 +47,4 @@ async function createTables() {
 
 // Call the function to create tables
 export default createTables;
+

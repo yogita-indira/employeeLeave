@@ -18,7 +18,7 @@ export async function POST(request) {
         });
     }
 
-    const hashedPassword = await hash(password, 10); // Using 10 salt rounds
+    const hashedPassword = await hash(password, 10); 
 
     // Insert the user into the database
     const result = await connection.query(
