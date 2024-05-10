@@ -1,16 +1,35 @@
-'use client';
+'use client'
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useFormik } from 'formik';
+import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 
 const Login = () => {
   const router = useRouter();
-  
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwt.decode(token);
+        if (decodedToken) {
+          const userRole = decodedToken.role;
+          setRole(userRole);
+        } else {
+          console.error('Failed to decode token');
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+  }, []); // Empty dependency array means it runs only once on mount
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -25,16 +44,27 @@ const Login = () => {
         const response = await axios.post('/api/login', values);
         console.log(response);
         if (response.status === 200) {
-        
-        
-        
           localStorage.setItem('token', response.data.token);
-          
-          console.log(response.data.token)
-          
-          router.push('/userDashboard');
-          // Save session token in localStorage or cookies
-       
+          const token = localStorage.getItem('token');
+
+          if (token) {
+            try {
+              const decodedToken = jwt.decode(token);
+              if (decodedToken) {
+                const userRole = decodedToken.role;
+                setRole(userRole);
+                if (userRole === 'Admin') {
+                  router.push('/adminDashboard');
+                } else {
+                  router.push('/userDashboard');
+                }
+              } else {
+                console.error('Failed to decode token');
+              }
+            } catch (error) {
+              console.error('Error decoding token:', error);
+            }
+          }
         } else {
           console.error('Failed to login:');
           toast.error('Failed to login');
@@ -45,7 +75,6 @@ const Login = () => {
       }
     }
   });
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-blue-200">
       <div className="max-w-screen-xl w-1/3 mx-auto">

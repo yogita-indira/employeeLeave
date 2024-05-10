@@ -3,11 +3,14 @@ import { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
 import { FaUser } from "react-icons/fa";
 import Link from 'next/link';
+import ApplyLeave from '../components/ApplyLeave';
 const UserDashboard = () => {
   const [email, setEmail] = useState('');
+  const [showLeaveForm, setShowLeaveForm] = useState(false);
   const [password, setPassword] = useState('');
   const [leaves, setLeaves] = useState([]);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [decodedToken, setDecodedToken] = useState(null); // Define decodedToken state
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -19,6 +22,7 @@ const UserDashboard = () => {
         if (decodedToken) {
           const userEmail = decodedToken.email;
           setEmail(userEmail);
+          setDecodedToken(decodedToken);
           // You can also set other user data from the token here if needed
         } else {
           console.error('Failed to decode token');
@@ -50,6 +54,9 @@ const UserDashboard = () => {
     setPassword(userPassword || 'Password not found');
   };
 
+  const handleApplyForLeave = () => {
+    setShowLeaveForm(true);
+  };
   const handleApplyLeave = () => {
     // Add logic for applying leave
     console.log('Leave application logic here');
@@ -100,11 +107,9 @@ const UserDashboard = () => {
             <h1 className="text-2xl font-bold mb-4">User Dashboard</h1>
           </div>
           <div className="ml-auto">
-          <Link href="/register">
-  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-    Apply for Leave
-  </button>
-</Link>
+          <button onClick={handleApplyForLeave}>Apply for leave</button>
+          {showLeaveForm && <ApplyLeave decodedToken={decodedToken} />}
+
 
 
             
