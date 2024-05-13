@@ -2,7 +2,6 @@ import { pool } from "@/app/config/db";
 export async function POST(request) {
   try {
     const connection = await pool.getConnection();
-const clientId=req.param
     const [users] = await connection.query(
       `SELECT * FROM Users WHERE id=[userId] and role==Employee`
     );

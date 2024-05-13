@@ -5,18 +5,18 @@ import { pool } from '@/app/config/db';
 export async function POST(req) {
     try {
         const connection = await pool.getConnection();
-        const requestBody = await req.json(); // Corrected from 'request.json()'
+        const requestBody = await req.json(); 
 
-        console.log('Request Body:', requestBody); // Log the request body
+        console.log('Request Body:', requestBody); 
 
         const { userId, start_date, end_date, leave_type,status, reason } = requestBody;
 
-        // Validate if userId and other required fields are present
+        
         if (!userId || !start_date || !end_date || !leave_type || !reason) {
             throw new Error('Required fields are missing in the request body');
         }
 
-        // Check if userId is a valid integer
+        
         if (typeof userId !== 'number') {
             throw new Error('userId must be an integer');
         }
@@ -38,6 +38,7 @@ export async function POST(req) {
       );
       
         connection.release();
+
 
         return new Response(
             JSON.stringify({ message: "Leave entry created successfully" }),
