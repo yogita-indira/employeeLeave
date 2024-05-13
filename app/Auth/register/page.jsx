@@ -18,7 +18,7 @@ const Register = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const Register = () => {
       
       if (response.ok) {
         toast.success('Registration successful');
-        router.push('/login');
+        router.push('/Auth/login');
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);
@@ -147,7 +147,7 @@ const Register = () => {
             <div className="mt-4 text-center">
               <p>
                 Already registered?{' '}
-                <Link href="/login">
+                <Link href="/Auth/login">
                 
                     Login
                 

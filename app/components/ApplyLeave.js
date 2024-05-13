@@ -1,71 +1,93 @@
 'use client'
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import jwt from 'jsonwebtoken';
 
 const ApplyLeave = ({ decodedToken }) => {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // console.log(decodedToken, "heyyyyyyyyyyyyyyyyyyyyyyyyyy")
 
   const formik = useFormik({
     initialValues: {
-      fromDate: '',
-      toDate: '',
-      leaveType: '',
+      userId: decodedToken.userId, // Add userId field
+      start_date: '', // Change fromDate to start_date
+      end_date: '', // Change toDate to end_date
+      leave_type: '', 
+      status:'',// Change leaveType to leave_type
       reason: '',
     },
     validationSchema: Yup.object({
-      fromDate: Yup.string().required('From date is required'),
-      toDate: Yup.string().required('To date is required'),
-      leaveType: Yup.string().required('Leave type is required'),
+      start_date: Yup.string().required('From date is required'), // Change fromDate to start_date
+      end_date: Yup.string().required('To date is required'), // Change toDate to end_date
+      leave_type: Yup.string().required('Leave type is required'), // Change leaveType to leave_type
       reason: Yup.string().required('Reason is required'),
     }),
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
       
-        const userEmail=decodedToken.email
-        const userId=decodedToken.userId;
-        
-        // Create leave entry API call
-        const leaveResponse = await fetch('/api/saveLeave', {
+        const leaveResponse = await fetch('/api/employee/saveLeave', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          
           body: JSON.stringify({
-            userId,
-            ...values,
+            userId: decodedToken.userId,
+            start_date: values.start_date,
+            end_date: values.end_date,
+            leave_type: values.leave_type,
+            status: 'pending', // Set the status to 'pending' explicitly
+            reason: values.reason,
           }),
+          
         });
-console.log(leaveResponse, "leaveresponse.............")
         if (!leaveResponse.ok) {
           throw new Error('Failed to create leave entry');
         }
+        else {
+          console.log("done")
+        }
 
-        // // Send email API call
-        // const emailResponse = await fetch('/api/sendEmail', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({
-        //     userEmail,
-        //     subject: 'Leave Application',
-        //     html: `Leave application details: 
-        //       From Date: ${values.fromDate}
-        //       To Date: ${values.toDate}
-        //       Leave Type: ${values.leaveType}
-        //       Reason: ${values.reason}`,
-        //   }),
-        // });
 
-        // if (emailResponse.ok) {
-        //   alert('Email sent successfully');
-        // } else {
-        //   throw new Error('Failed to send email');
-        // }
+
+
+
+
+
+
+
+        const sendersEmail=decodedToken.email;
+        console.log(sendersEmail)
+        const emailContent = '<p>This is the HTML content of the email.</p>';  
+        const subject="request for leave"
+const sendEmailResponse = await fetch('/api/employee/sendEmail', {
+
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          
+          body: JSON.stringify({
+           sendersEmail:sendersEmail,
+           subject:subject,
+           emailContent:emailContent
+
+          }),
+          
+        });
+    
+        if (!sendEmailResponse.ok) {
+          throw new Error('Failed to send email');
+        }
+        else {
+          router.push('/employee/emailSuccessPage');
+          console.log("email sent successfully........")
+        }
+
+
       } catch (error) {
         console.error('Error:', error.message);
         alert('Failed to submit leave application');
@@ -75,7 +97,7 @@ console.log(leaveResponse, "leaveresponse.............")
   });
 
   const handleCloseForm = () => {
-    // Add logic to close the form
+   
     console.log('Closing the form...');
   };
 
@@ -85,52 +107,53 @@ console.log(leaveResponse, "leaveresponse.............")
         <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Apply for Leave</h2>
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           <div className="flex flex-col">
-            <label htmlFor="fromDate" className="text-gray-700 font-semibold mb-2">From Date</label>
+            <label htmlFor="start_date" className="text-gray-700 font-semibold mb-2">From Date</label>
             <input
               type="date"
-              id="fromDate"
-              name="fromDate"
-              value={formik.values.fromDate}
+              id="start_date"
+              name="start_date"
+              value={formik.values.start_date}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
-            {formik.touched.fromDate && formik.errors.fromDate ? (
-              <div className="text-red-500">{formik.errors.fromDate}</div>
+            {formik.touched.start_date && formik.errors.start_date ? (
+              <div className="text-red-500">{formik.errors.start_date}</div>
             ) : null}
           </div>
           <div className="flex flex-col">
-            <label htmlFor="toDate" className="text-gray-700 font-semibold mb-2">To Date</label>
+            <label htmlFor="end_date" className="text-gray-700 font-semibold mb-2">To Date</label>
             <input
               type="date"
-              id="toDate"
-              name="toDate"
-              value={formik.values.toDate}
+              id="end_date"
+              name="end_date"
+              value={formik.values.end_date}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
-            {formik.touched.toDate && formik.errors.toDate ? (
-              <div className="text-red-500">{formik.errors.toDate}</div>
+            {formik.touched.end_date && formik.errors.end_date ? (
+              <div className="text-red-500">{formik.errors.end_date}</div>
             ) : null}
           </div>
           <div className="flex flex-col">
-            <label htmlFor="leaveType" className="text-gray-700 font-semibold mb-2">Leave Type</label>
+            <label htmlFor="leave_type" className="text-gray-700 font-semibold mb-2">Leave Type</label>
             <select
-              id="leaveType"
-              name="leaveType"
-              value={formik.values.leaveType}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Select Leave Type</option>
-              <option value="sick">Sick Leave</option>
-              <option value="annual">Annual Leave</option>
-            </select>
-            {formik.touched.leaveType && formik.errors.leaveType ? (
-              <div className="text-red-500">{formik.errors.leaveType}</div>
-            ) : null}
+  id="leave_type"
+  name="leave_type"
+  onChange={formik.handleChange}
+  onBlur={formik.handleBlur}
+  value={formik.values.leave_type}
+  className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+>
+  <option value="">Select Leave Type</option>
+  <option value="sick">sick</option>
+  <option value="annual">annual</option>
+</select>
+{formik.touched.leave_type && formik.errors.leave_type ? (
+  <div className="text-red-500">{formik.errors.leave_type}</div>
+) : null}
+
           </div>
           <div className="flex flex-col">
             <label htmlFor="reason" className="text-gray-700 font-semibold mb-2">Reason</label>

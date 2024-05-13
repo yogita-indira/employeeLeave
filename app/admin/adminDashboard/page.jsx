@@ -34,7 +34,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/getEmployee');
+      const response = await axios.get('/api/admin/getEmployee');
       setUsers(response.data.users);
       setLoading(false);
       setError(null);
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
 
   const deleteUser = async (userId) => {
     try {
-      await axios.delete(`/api/deleteEmployee/${userId}`);
+      await axios.delete(`/api/admin/deleteEmployee/${userId}`);
       setUsers(users.filter((user) => user.id !== userId));
     } catch (error) {
       console.error('Error deleting user:', error);

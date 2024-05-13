@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
 import { FaUser } from "react-icons/fa";
 import Link from 'next/link';
-import ApplyLeave from '../components/ApplyLeave';
-import ProtectedRoute from '../utils/protectedRoute';
+import ApplyLeave from '@/app/components/ApplyLeave';
+import ProtectedRoute from '@/app/utils/protectedRoute';
 const UserDashboard = () => {
+  
   const [email, setEmail] = useState('');
   const [showLeaveForm, setShowLeaveForm] = useState(false);
   const [password, setPassword] = useState('');

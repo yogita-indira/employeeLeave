@@ -41,7 +41,7 @@ const Login = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const response = await axios.post('/api/login', values);
+        const response = await axios.post('/api/auth/login', values);
         console.log(response);
         if (response.status === 200) {
           localStorage.setItem('token', response.data.token);
@@ -54,9 +54,9 @@ const Login = () => {
                 const userRole = decodedToken.role;
                 setRole(userRole);
                 if (userRole === 'Admin') {
-                  router.push('/adminDashboard');
+                  router.push('/admin/adminDashboard');
                 } else {
-                  router.push('/userDashboard');
+                  router.push('/employee/EDashboard');
                 }
               } else {
                 console.error('Failed to decode token');
@@ -142,7 +142,7 @@ const Login = () => {
             <div className="text-center">
               <p>
                 Don't have an account?{' '}
-                <Link href="/register">
+                <Link href="/Auth/register">
                   Register
                 </Link>
               </p>

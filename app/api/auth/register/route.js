@@ -8,7 +8,7 @@ export async function POST(request) {
     const requestBody = await request.json();
 
     const { username, email, password, role } = requestBody;
-    console.log(username);
+
 
     const [existingUser] = await connection.query('SELECT * FROM Users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
