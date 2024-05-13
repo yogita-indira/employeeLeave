@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const ApplyLeave = ({ decodedToken }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // console.log(decodedToken, "heyyyyyyyyyyyyyyyyyyyyyyyyyy")
 
   const formik = useFormik({
     initialValues: {
@@ -23,8 +24,9 @@ const ApplyLeave = ({ decodedToken }) => {
     onSubmit: async (values) => {
       setIsSubmitting(true);
       try {
-        const token = localStorage.getItem('token');
-        const decodedToken = jwt.decode(token);
+      
+        const userEmail=decodedToken.email
+        const userId=decodedToken.userId;
         
         // Create leave entry API call
         const leaveResponse = await fetch('/api/saveLeave', {
@@ -33,37 +35,37 @@ const ApplyLeave = ({ decodedToken }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            decodedToken,
+            userId,
             ...values,
           }),
         });
-
+console.log(leaveResponse, "leaveresponse.............")
         if (!leaveResponse.ok) {
           throw new Error('Failed to create leave entry');
         }
 
-        // Send email API call
-        const emailResponse = await fetch('/api/send-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            decodedToken,
-            subject: 'Leave Application',
-            html: `Leave application details: 
-              From Date: ${values.fromDate}
-              To Date: ${values.toDate}
-              Leave Type: ${values.leaveType}
-              Reason: ${values.reason}`,
-          }),
-        });
+        // // Send email API call
+        // const emailResponse = await fetch('/api/sendEmail', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({
+        //     userEmail,
+        //     subject: 'Leave Application',
+        //     html: `Leave application details: 
+        //       From Date: ${values.fromDate}
+        //       To Date: ${values.toDate}
+        //       Leave Type: ${values.leaveType}
+        //       Reason: ${values.reason}`,
+        //   }),
+        // });
 
-        if (emailResponse.ok) {
-          alert('Email sent successfully');
-        } else {
-          throw new Error('Failed to send email');
-        }
+        // if (emailResponse.ok) {
+        //   alert('Email sent successfully');
+        // } else {
+        //   throw new Error('Failed to send email');
+        // }
       } catch (error) {
         console.error('Error:', error.message);
         alert('Failed to submit leave application');

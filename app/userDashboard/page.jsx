@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { FaUser } from "react-icons/fa";
 import Link from 'next/link';
 import ApplyLeave from '../components/ApplyLeave';
+import ProtectedRoute from '../utils/protectedRoute';
 const UserDashboard = () => {
   const [email, setEmail] = useState('');
   const [showLeaveForm, setShowLeaveForm] = useState(false);
@@ -72,6 +73,7 @@ const UserDashboard = () => {
   };
 
   return (
+    <ProtectedRoute>
     <div>
       <nav className="bg-sky-300 p-4">
         <div className="container mx-auto flex justify-between items-center">
@@ -152,6 +154,7 @@ const UserDashboard = () => {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 
