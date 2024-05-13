@@ -1,7 +1,7 @@
 import { pool } from "@/app/config/db";
 import { hash } from "bcrypt";
 import nodemailer from "nodemailer";
-
+require(dotenv).config();
 export async function POST(request) {
   try {
     const {sendersEmail, subject,  emailContent } = await request.json();
@@ -16,8 +16,8 @@ export async function POST(request) {
       port: 587,
       secure: false, 
       auth: {
-          user: "yogitabhargava1@gmail.com",
-          pass: "uskj bopu rdzw hbsz",
+          user: process.env.email,
+          pass: process.env.password,
       },
   });
 
