@@ -12,7 +12,7 @@ const UserDashboard = () => {
   const [password, setPassword] = useState('');
   const [leaves, setLeaves] = useState([]);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [decodedToken, setDecodedToken] = useState(null); // Define decodedToken state
+  const [decodedToken, setDecodedToken] = useState(null); 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -25,7 +25,7 @@ const UserDashboard = () => {
           const userEmail = decodedToken.email;
           setEmail(userEmail);
           setDecodedToken(decodedToken);
-          // You can also set other user data from the token here if needed
+         
         } else {
           console.error('Failed to decode token');
         }
