@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import jwt from 'jsonwebtoken'; // Import jwt
 import { FaToggleOn } from 'react-icons/fa';
-
+import { FaUserCircle } from "react-icons/fa";
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,15 +76,20 @@ const AdminDashboard = () => {
       <div className={`h-screen w-64 bg-sky-300 ${sidebarOpen ? 'block' : 'hidden'}`}>
         <h1 className="text-3xl font-bold text-white p-4">Admin Panel</h1>
         <p className="text-white p-4">{decodedToken.username}</p> {/* Display username */}
+
         <button className="text-white p-4" onClick={handleSignOut}>Sign Out</button>
         {/* Add any additional sidebar content here */}
       </div>
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        <nav className="bg-blue-300 p-4">
-          <div className="container mx-auto flex justify-between items-center">
+        <nav className="bg-sky-300 p-4">
+          <div className="container mx-auto flex justify-between items-center space-between">
+        
+        
             <button className="text-white" onClick={handleToggleSidebar}><FaToggleOn size={28} /></button>
+          <div > <FaUserCircle />
+            </div> 
           </div>
         </nav>
 
@@ -116,6 +121,7 @@ const AdminDashboard = () => {
                   <tr key={user.id} className="border-b hover:bg-gray-100">
                     <td className="px-4 py-2">{user.username}</td>
                     <td className="px-4 py-2">{user.email}</td>
+
                     <td className="px-4 py-2 flex gap-2">
                       <button
                         onClick={() => handleDeleteUser(user.id)}
