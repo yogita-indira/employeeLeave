@@ -47,3 +47,33 @@ body {
     text-wrap: balance;
   }
 } */ 
+
+/* registration  */
+.input-field{
+  border: 1px solid grey;
+  width: 95%;
+  padding: 5px;
+  border-radius: 6px;
+}
+.toggle-switch-label{
+  padding-left: 10px;
+  /* margin: 90px; */
+}
+
+.count-employee{
+ 
+  height: 90px;
+  width: 120px;
+  color: white;
+  padding-bottom: 12px;
+  font-weight: 600;
+  margin-bottom: 40px;
+  border-radius: 8px;
+  text-align: center;
+  justify-content: center;
+
+}
+.total{
+ 
+  justify-content: space-around;
+}

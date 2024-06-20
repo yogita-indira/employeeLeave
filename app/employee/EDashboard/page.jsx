@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import Link from 'next/link';
 import ApplyLeave from '@/app/components/ApplyLeave';
 import ProtectedRoute from '@/app/utils/protectedRoute';
+import axios from 'axios';
 const UserDashboard = () => {
   
   const [email, setEmail] = useState('');
@@ -39,18 +40,19 @@ const UserDashboard = () => {
     const userPassword = localStorage.getItem('userPassword');
     if (userPassword) setPassword(userPassword);
   }, []);
-
   useEffect(() => {
-   
-    const dummyLeaves = [
-      { id: 1, startDate: '2024-05-10', endDate: '2024-05-12', leaveType: 'Sick Leave', status: 'Approved', reason: 'Fever' },
-      { id: 2, startDate: '2024-06-15', endDate: '2024-06-20', leaveType: 'Annual Leave', status: 'Pending', reason: 'Vacation' },
-    
-    ];
-
-    setLeaves(dummyLeaves);
-  }, []);
-
+    if (email) {
+     const leaves= axios.post('/api/leave/getLeave', { email })
+        .then(response => {
+          setLeaves(response.data);
+        })
+     
+        .catch(error => {
+          console.error('Error fetching leaves:', error);
+        });
+    }
+  }, [email]);
+console.log(leaves)
   const handleFetchCredentials = () => {
     const userPassword = localStorage.getItem('userPassword');
     setPassword(userPassword || 'Password not found');
@@ -72,7 +74,14 @@ const UserDashboard = () => {
    
     console.log('Sign out logic here');
   };
-
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
   return (
     <ProtectedRoute>
     <div>
@@ -143,9 +152,9 @@ const UserDashboard = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {leaves.map(leave => (
                 <tr key={leave.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{leave.startDate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{leave.endDate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{leave.leaveType}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{formatDate(leave.start_date)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{formatDate(leave.end_date)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{leave.leave_type}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{leave.status}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{leave.reason}</td>
                 </tr>

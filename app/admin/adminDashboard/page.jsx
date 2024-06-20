@@ -1,10 +1,10 @@
-
 'use client'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import jwt from 'jsonwebtoken'; // Import jwt
 import { FaToggleOn } from 'react-icons/fa';
+
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,39 +81,45 @@ const AdminDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-auto">
         <nav className="bg-blue-300 p-4">
           <div className="container mx-auto flex justify-between items-center">
-        
             <button className="text-white" onClick={handleToggleSidebar}><FaToggleOn size={28} /></button>
           </div>
         </nav>
 
         <div className="container mx-auto px-4 py-8">
+          <div className='flex flex-wrap gap-4 mb-8'>
+            <div className='count-employee bg-orange-400'>Total No. of Employees 18</div>
+            <div className='count-employee bg-green-400'>Employees on leave</div>
+            <div className='count-employee bg-blue-400'>Pending Leave</div>
+            <div className='count-employee bg-red-400'>Approved Leave</div>
+            <div className='count-employee bg-purple-400'>Rejected Leaves </div>
+            <div className='count-employee bg-yellow-400'>Available leaves</div>
+          </div>
+        
           {loading ? (
-            <p className="text-gray-600">Loading...</p>
+            <p className="text-gray-600 text-center">Loading...</p>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <p className="text-red-500 text-center">{error}</p>
           ) : (
-            <table className="w-full">
+            <table className="w-full table-auto">
               <thead>
-                <tr>
-                 
+                <tr className="bg-gray-200">
                   <th className="px-4 py-2">Username</th>
                   <th className="px-4 py-2">Email</th>
-                  
+                  <th className="px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user.id}>
-                  
-                    <td className="border px-4 py-2">{user.username}</td>
-                    <td className="border px-4 py-2">{user.email}</td>
-                    <td className="border px-4 py-2">
+                  <tr key={user.id} className="border-b hover:bg-gray-100">
+                    <td className="px-4 py-2">{user.username}</td>
+                    <td className="px-4 py-2">{user.email}</td>
+                    <td className="px-4 py-2 flex gap-2">
                       <button
                         onClick={() => handleDeleteUser(user.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md mr-2"
+                        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md"
                       >
                         <FaTrash />
                       </button>

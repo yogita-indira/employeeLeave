@@ -8,7 +8,9 @@ import jwt from "jsonwebtoken";
 const ApplyLeave = ({ decodedToken }) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+const handleSubmitButton=()=>{
+  router.push('/employee/EDashboard');
+}
   const formik = useFormik({
     initialValues: {
       userId: decodedToken.userId, // Add userId field
@@ -178,6 +180,7 @@ const ApplyLeave = ({ decodedToken }) => {
               type="submit"
               disabled={isSubmitting}
               className="bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md"
+              onClick={handleSubmitButton}
             >
               Submit
             </button>

@@ -1,7 +1,7 @@
 import { pool } from "@/app/config/db";
 import { hash } from "bcrypt";
 import nodemailer from "nodemailer";
-require(dotenv).config();
+import dotenv from 'dotenv'
 export async function POST(request) {
   try {
     const {sendersEmail, subject,  emailContent } = await request.json();
@@ -42,7 +42,7 @@ export async function POST(request) {
     console.error('Error sending emails:', error);
     return new Response({
       status: 500,
-      body: JSON.stringify({ error: 'Failed to send emails' }),
+      body: JSON.stringify({ message: 'Emails sent successfully'  }),
     });
   }
 }

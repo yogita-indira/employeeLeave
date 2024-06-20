@@ -8,8 +8,8 @@ const Home = () => {
           Leave Management{" "}
         </h1>
         <div className="flex justify-center space-x-4">
-          <Link href="/login">Login</Link>
-          <Link href="/register">Register</Link>
+          <Link href="/Auth/login">Login</Link>
+          <Link href="/Auth/register">Register</Link>
         </div>
       </div>
     </div>
