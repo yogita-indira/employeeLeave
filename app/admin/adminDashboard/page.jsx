@@ -73,7 +73,7 @@ const AdminDashboard = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className={`h-screen w-64 bg-sky-300 ${sidebarOpen ? 'block' : 'hidden'}`}>
+      <div className={`h-screen w-64 bg-black ${sidebarOpen ? 'block' : 'hidden'}`}>
         <h1 className="text-3xl font-bold text-white p-4">Admin Panel</h1>
         <p className="text-white p-4">{decodedToken.username}</p> {/* Display username */}
 
@@ -83,12 +83,12 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        <nav className="bg-sky-300 p-4">
+        <nav className="bg-black p-4">
           <div className="container mx-auto flex justify-between items-center space-between">
         
         
             <button className="text-white" onClick={handleToggleSidebar}><FaToggleOn size={28} /></button>
-          <div > <FaUserCircle />
+          <div > <FaUserCircle style={{ width: '30px', height: '30px' , backgroundColor: 'white'}}/>
             </div> 
           </div>
         </nav>
@@ -113,6 +113,7 @@ const AdminDashboard = () => {
                 <tr className="bg-gray-200">
                   <th className="px-4 py-2">Username</th>
                   <th className="px-4 py-2">Email</th>
+                  <th className='px-4 py-2'>Total count of leaves</th>
                   <th className="px-4 py-2">Actions</th>
                 </tr>
               </thead>
@@ -121,7 +122,7 @@ const AdminDashboard = () => {
                   <tr key={user.id} className="border-b hover:bg-gray-100">
                     <td className="px-4 py-2">{user.username}</td>
                     <td className="px-4 py-2">{user.email}</td>
-
+<td>0</td>
                     <td className="px-4 py-2 flex gap-2">
                       <button
                         onClick={() => handleDeleteUser(user.id)}
@@ -147,3 +148,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+

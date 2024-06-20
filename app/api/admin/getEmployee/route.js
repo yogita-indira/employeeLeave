@@ -5,7 +5,7 @@ export async function GET(request) {
       const connection = await pool.getConnection();
   
      
-      const [users] = await connection.query(`SELECT * FROM Users WHERE role='Employee'`);
+      const [users] = await connection.query(`SELECT distinct username, email, leave_type, status FROM Users join leavestable WHERE role='Employee'`);
 
   
       connection.release();
